@@ -1,0 +1,302 @@
+*{
+    font-family:sans-serif;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: 0.3s ease;
+}
+body{
+    background-image: url("images/travel.jpeg");
+    height: 95vh;
+    width: 98vw;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: white;
+}
+.logo{
+    background: linear-gradient(to right,#046b9e,#d33390);
+    background-clip: text;
+    color: transparent;
+    display: inline;
+    cursor: pointer;
+    font-size: 2.5rem;
+}
+.nav{
+    margin-left: 66vw;
+}
+.header a{
+    color: black;
+    padding: 0.8rem;
+}
+.header a:hover{
+    color: purple;
+}
+.header{
+    position: fixed;
+}
+.active{
+    background: rgba( 255, 255, 255, 0.25 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 8px );
+    -webkit-backdrop-filter: blur( 8px );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 ); 
+    padding: 0.8rem;
+}
+.element{
+    display: flex;
+    padding-top:40vh;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+h2{
+    font-size: 2rem;
+}
+.adv{
+    background: linear-gradient(to right,#046b9e,#d33390);
+    background-clip: text;
+    color: transparent;
+    display: inline;
+    cursor: pointer;
+    font-size: 2.5rem;
+}
+.p1{
+    color: black;
+    font-weight: 500;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+.typing-text:before{
+    content:"Indian";
+    animation: words 4s infinite;
+}
+.typing-text:after{
+    content: "";
+}
+@keyframes words{
+    50%{
+        content: "International";
+    }
+}
+.start{
+    border: 2px solid purple;
+    border-radius: 30px;
+    text-decoration: none;
+    color: black;
+    margin-left: 45vw;
+    padding: 1rem;
+    background: transparent;
+    font-size: 1.2rem;
+    transition: 0.5s ease;
+    color: purple;
+}
+.start:hover{
+    background-color: purple;
+    color: white;
+    cursor: pointer;
+
+}
+.empty{
+    background-size: cover;
+    background-position: center;
+}
+.act{
+    padding-top: 35vh;
+    text-align: center;
+    font-size: 2.5rem;
+}
+.second{
+    height: 900px;
+    width: 100%;
+}
+.third{
+    height: 1750px;
+    width: 100%;
+    background-color: rgb(228, 228, 228);
+    margin: 0;
+    padding: 0;
+}
+.fourth{
+    height: 800px;
+    width: 100%;
+    background-image: url("images/tour.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+}
+.container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto;
+
+}
+.container img{
+    border-radius: 50%;
+    height: 200px;
+    width: 200px;
+    align-items: center;
+    box-shadow: 0 0 25px black;
+}
+.title{
+    background: linear-gradient(to right,#046b9e,#d33390);
+    background-clip: text;
+    color: transparent;
+    display: inline;
+    cursor: pointer;
+    font-size: 2rem;
+    text-align: center;
+
+}
+.item{
+    align-items: center;
+    text-align: center;
+}
+.item p{
+    padding: 1rem;
+}
+.item a{
+    border: 2px solid purple;
+    border-radius: 30px;
+    text-decoration: none;
+    color: black;
+    padding: 1rem;
+    background: transparent;
+    font-size: 1rem;
+    transition: 0.3s ease;
+    color: purple;
+}
+.item a:hover{
+    background-color: purple;
+    color: white;
+    cursor: pointer;
+}
+.third h1{
+    text-align: center;
+    font-size: 2rem;
+    padding-top: 130px;
+}
+.package-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2rem;
+    justify-content: space-evenly;
+    justify-items: center;
+    align-content: space-evenly;
+    align-items: center;
+}
+.packages{
+    background-color: white;
+    border: 2.5px solid purple;
+    height: 700px;
+    width: 400px;
+    text-align: center;
+    border-radius: 10px;
+}
+.package-container img{
+    margin-top: 1rem;
+    height: 200px;
+    width: 350px;
+    border-radius: 10px;
+}
+.package-container h1{
+    padding: 0;
+    margin: 0;
+    margin-top: 10px;
+    font-size: 1.3rem;
+}
+.package-container p{
+    padding: 1rem;
+    margin: 1rem;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.packages:hover{
+    background-color: purple;
+    cursor: pointer;
+    color: white;
+}
+.packages h2{
+    margin: 0;
+    padding-bottom: 0;
+    font-size: 1.5rem;
+    font-weight: normal;
+    color: rgb(233, 6, 233);
+}
+.packages span{
+    margin: 0;
+    padding: 0;
+}
+.packages button{
+    padding: 1rem;
+    margin: 1rem;
+    border: 2px solid purple;
+    color: purple;
+    border-radius: 40px;
+    background:transparent;
+}
+.packages:hover button{
+    border: 2px solid white;
+    color: white;
+}
+.packages button:hover{
+    background-color: white;
+    color: purple;
+}
+.contact-glass{
+    height: 45%;
+    width: 30%;
+    top: 50%;
+    left: 50%;
+    transform: translate(110%,38%);
+    background: rgba( 255, 255, 255, 0.25 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 ); 
+    padding: 0.8rem;
+}
+.cont{
+    background: linear-gradient(to right,#046b9e,#d33390);
+    background-clip: text;
+    color: transparent;
+    display: inline;
+    cursor: pointer;
+    font-size: 2rem;
+    margin-left: 10vw;
+    padding: 1rem;
+}
+.fourth h3{
+    color: rgb(83, 5, 83);
+    text-align: center;
+    margin-top: 20rem;
+}
+.logo1{
+    background: linear-gradient(to right,#046b9e,#d33390);
+    background-clip: text;
+    color: transparent;
+    display: inline;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+ul{
+    list-style-type: none;
+    text-align: justify;
+    margin-left: 8vw;
+}
+ul li{
+    padding: 0.8rem;
+    
+}
+.social-icons a{
+    color: purple;
+}
+.social-icons a:hover{
+    color: #d33390;
+}
