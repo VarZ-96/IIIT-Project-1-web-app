@@ -17,22 +17,28 @@ body{
     background: linear-gradient(to right,#046b9e,#d33390);
     background-clip: text;
     color: transparent;
-    display: inline;
+    display: inline-flex;
     cursor: pointer;
     font-size: 2.5rem;
-}
-.nav{
-    margin-left: 66vw;
-}
-.header a{
-    color: black;
-    padding: 0.8rem;
+    margin: 0;
 }
 .header a:hover{
     color: purple;
 }
 .header{
     position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: auto;
+}
+.header a{
+    color: black;
+    padding: 0.8rem;
+}
+.nav{
+    margin-left: 60vw;
 }
 .active{
     background: rgba( 255, 255, 255, 0.25 );
