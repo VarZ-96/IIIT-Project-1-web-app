@@ -15,7 +15,7 @@ window.onload=()=>{
 };
 $("button").click(function() {
     $('html,body').animate({
-        scrollTop: $(".second").offset().top+220},
+        scrollTop: $(".second").offset().top+150},
         'slow');
 });
 $(".nav").click(function() {
@@ -25,7 +25,7 @@ $(".nav").click(function() {
 });
 $(".nava").click(function() {
     $('html,body').animate({
-        scrollTop: $(".second").offset().top + 220},
+        scrollTop: $(".second").offset().top + 150},
         'slow');
 });
 $(".navp").click(function() {
