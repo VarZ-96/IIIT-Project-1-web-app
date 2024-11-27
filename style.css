@@ -6,7 +6,7 @@
 }
 body{
     background-image: url("images/travel.jpeg");
-    height: 95vh;
+    height: 91vh;
     width: 98vw;
     background-position: center;
     background-repeat: no-repeat;
@@ -48,6 +48,7 @@ body{
     border-radius: 10px;
     border: 1px solid rgba( 255, 255, 255, 0.18 ); 
     padding: 0.8rem;
+    z-index: 10;
 }
 .element{
     display: flex;
@@ -108,14 +109,23 @@ h2{
     background-size: cover;
     background-position: center;
 }
-.act{
-    padding-top: 35vh;
+.second h1{
     text-align: center;
     font-size: 2.5rem;
+    padding-top: 7rem;
+}
+.first{
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 .second{
-    height: 900px;
+    margin-top: 0;
+    padding-top: 0;
+    height: 700px;
     width: 100%;
+
 }
 .third{
     height: 1750px;
@@ -125,7 +135,7 @@ h2{
     padding: 0;
 }
 .fourth{
-    height: 800px;
+    height: 1000px;
     width: 100%;
     background-image: url("images/tour.jpg");
     background-position: center;
@@ -159,8 +169,10 @@ h2{
 
 }
 .item{
+    margin-top: 2rem;
     align-items: center;
     text-align: center;
+
 }
 .item p{
     padding: 1rem;
@@ -306,3 +318,119 @@ ul li{
 .social-icons a:hover{
     color: #d33390;
 }
+
+
+
+.wrapper1 {
+    height: 45%;
+    width: 30%;
+    top: 50%;
+    left: 50%;
+    transform: translate(110%,38%);
+    background: rgba( 255, 255, 255, 0.25 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 ); 
+    padding: 0.8rem;
+  }
+  
+  .wrapper1 .title1 h1 {
+    margin-top: 5rem;
+    background: linear-gradient(to right,#046b9e,#d33390);
+    background-clip: text;
+    color: transparent;
+    display: inline;
+    cursor: pointer;
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 25px;
+
+  }
+  
+  .contact-form {
+    display: flex;
+  }
+  
+  .uil {
+    height: 50px;
+    width: 50px;
+  }
+  
+  .input-fields {
+    display: flex;
+    flex-direction: column;
+    margin-right: 4%;
+  }
+  
+  .input-fields,
+  .msg {
+    width: 60%;
+  }
+  
+  .input-fields .input,
+  .msg textarea {
+    margin: 10px 0;
+    background: transparent;
+    border: 0px;
+    border-bottom: 2px solid #635f668f;
+    padding: 10px;
+    color: black;
+    width: 100%;
+  }
+  
+  .msg textarea {
+    height: 189px;
+  }
+  .msg .btn1 {
+    margin-top: 1rem;
+    display: inline-block;
+    color: black;
+    cursor: pointer;
+    font-size: 1.7rem;
+    padding: 1rem 3rem;
+    background: none;
+  }
+  .btn1 button[type="submit"] {
+    padding: 1rem;
+    margin: 1rem;
+    border: 2px solid purple;
+    color: purple;
+    border-radius: 40px;
+    background:transparent;
+  }
+  
+  i {
+    color: purple;
+  }
+
+  form {
+    width: 90vw;
+    margin: 0 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 0.2rem solid white;
+    display: flex;
+    align-items: center;
+  }
+  form input {
+    width: 100%;
+    font-size: 1rem;
+    color: white;
+    text-transform: none;
+    background: none;
+    padding-right: 2rem;
+  }
+  
+  form input::placeholder {
+    color: #aaa;
+  }
+  
+  form label {
+    font-size: 1rem;
+    cursor: pointer;
+    color: white;
+  }
+  form label:hover {
+    color: purple;
+  }
