@@ -1,3 +1,23 @@
+// --- Check Login Status on Page Load ---
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('http://localhost:3000/auth/status', {
+    credentials: 'include' // This tells the browser to send cookies
+    })
+        .then(res => res.json())
+        .then(data => {
+            const authButton = document.getElementById('auth-button');
+            if (data.loggedIn) {
+                // User is logged in, change the button to a Logout link
+                authButton.textContent = `Logout`;
+                authButton.href = "http://localhost:3000/logout";
+            }else {
+                // User is not logged in, keep the button as is
+                authButton.textContent = 'Sign in with Google';
+                authButton.href = 'http://localhost:3000/auth/google';
+            }
+        })
+        .catch(error => console.error('Error checking auth status:', error));
+});
 window.onscroll=()=>{
     if(window.scrollY>0){
         document.querySelector('.header').classList.add('active');

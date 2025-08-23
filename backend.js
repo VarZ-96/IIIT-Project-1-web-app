@@ -1,15 +1,107 @@
 const express = require("express");
 const cors = require("cors");
-const db = require("./db"); // Your db.js file 
-const Razorpay = require("razorpay"); // Import Razorpay
-require('dotenv').config(); // Load variables from .env 
+const db = require("./db");
+const Razorpay = require("razorpay");
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const session = require('express-session');
+require('dotenv').config();
 
 const app = express();
 const port = 3000;
 
+// --- Middleware Setup ---
+app.use(cors({
+    origin: 'http://localhost:5500', // Allow your frontend origin
+    credentials: true                // Allow cookies to be sent
+}));
 app.use(express.json());
-app.use(cors());
 
+// Session Middleware (must be before Passport)
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Set to true if using HTTPS
+}));
+
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+// --- Passport Google Strategy ---
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "/auth/google/callback" // Relative path
+  },
+  (accessToken, refreshToken, profile, done) => {
+    const email = profile.emails[0].value;
+    const googleId = profile.id;
+    const name = profile.displayName; // Get the user's name
+
+    db.query('SELECT * FROM users WHERE google_id = $1', [googleId], (err, result) => {
+        if (err) { return done(err); }
+        if (result.rows.length > 0) {
+            return done(null, result.rows[0]);
+        } else {
+            // Save the name when creating a new user
+            const sql = 'INSERT INTO users (email, google_id, name) VALUES ($1, $2, $3) RETURNING *';
+            db.query(sql, [email, googleId, name], (err, insertResult) => {
+                if (err) { return done(err); }
+                return done(null, insertResult.rows[0]);
+            });
+        }
+    });
+  }
+));
+
+// Stores user ID in the session
+passport.serializeUser((user, done) => {
+    done(null, user);
+});
+
+// Retrieves user data from the session
+passport.deserializeUser((user, done) => {
+    // You can skip the database call here if the full user object is in the session
+    done(null, user);
+});
+
+// --- Auth Routes ---
+app.get('/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+app.get('/auth/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/' }),
+  (req, res) => {
+    // Successful authentication, redirect to the frontend.
+    // NOTE: Make sure your frontend runs on this address or change it.
+    res.redirect('http://localhost:5500/index.html');
+  }
+);
+// --- New Endpoint to Check Auth Status ---
+app.get('/auth/status', (req, res) => {
+    if (req.isAuthenticated()) {
+        // If user is logged in, send back their info
+        res.json({
+            loggedIn: true,
+            user: {
+                name: req.user.name || req.user.email, // Use name if available, otherwise email
+                // You can add more user details here if needed
+            }
+        });
+    } else {
+        // If user is not logged in
+        res.json({ loggedIn: false });
+    }
+});
+app.get('/logout', (req, res, next) => {
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    res.redirect('http://localhost:5500/index.html');
+  });
+});
 // --- Initialize Razorpay ---
 const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID, // Your Key ID from .env
