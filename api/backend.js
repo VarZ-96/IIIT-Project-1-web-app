@@ -74,11 +74,11 @@ function ensureAuthenticated(req, res, next) {
     res.status(401).json({ error: 'You must be logged in to do that.' });
 }
 // --- Auth Routes ---
-app.get('/auth/google',
+app.get('/api/auth/google',
   passport.authenticate('google', { scope: ['profile', 'email'] })
 );
 
-app.get('/auth/google/callback', 
+app.get('/api/auth/google/callback', 
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
     // Successful authentication, redirect to the frontend.
@@ -87,7 +87,7 @@ app.get('/auth/google/callback',
   }
 );
 // --- New Endpoint to Check Auth Status ---
-app.get('/auth/status', (req, res) => {
+app.get('/api/auth/status', (req, res) => {
     if (req.isAuthenticated()) {
         // If user is logged in, send back their info
         res.json({
@@ -102,7 +102,7 @@ app.get('/auth/status', (req, res) => {
         res.json({ loggedIn: false });
     }
 });
-app.get('/logout', (req, res, next) => {
+app.get('/api/logout', (req, res, next) => {
   req.logout(function(err) {
     if (err) { return next(err); }
     res.redirect('https://iiit-project-1-web-app-varz-96s-projects.vercel.app/');
@@ -111,7 +111,7 @@ app.get('/logout', (req, res, next) => {
 // --- Cart API Routes ---
 
 // GET current user's cart
-app.get('/cart', ensureAuthenticated, (req, res) => {
+app.get('/api/cart', ensureAuthenticated, (req, res) => {
     const userId = req.user.id;
     db.query('SELECT * FROM cart_items WHERE user_id = $1 ORDER BY added_at', [userId], (err, result) => {
         if (err) {
@@ -124,7 +124,7 @@ app.get('/cart', ensureAuthenticated, (req, res) => {
 
 // ADD an item to the cart
 // ADD an item to the cart (with quantity handling)
-app.post('/cart/add', ensureAuthenticated, (req, res) => {
+app.post('/api/cart/add', ensureAuthenticated, (req, res) => {
     const userId = req.user.id;
     const { name, price } = req.body;
 
@@ -147,7 +147,7 @@ app.post('/cart/add', ensureAuthenticated, (req, res) => {
     });
 });
 // REMOVE an item from the cart
-app.delete('/cart/item/:id', ensureAuthenticated, (req, res) => {
+app.delete('/api/cart/item/:id', ensureAuthenticated, (req, res) => {
     const itemId = req.params.id;
     const userId = req.user.id;
 
@@ -166,7 +166,7 @@ app.delete('/cart/item/:id', ensureAuthenticated, (req, res) => {
     });
 });
 // CLEAR the user's cart (e.g., after payment)
-app.delete('/cart/clear', ensureAuthenticated, (req, res) => {
+app.delete('/api/cart/clear', ensureAuthenticated, (req, res) => {
     const userId = req.user.id;
     db.query('DELETE FROM cart_items WHERE user_id = $1', [userId], (err, result) => {
         if (err) {
@@ -184,7 +184,7 @@ const razorpay = new Razorpay({
 
 
 // --- NEW Endpoint for Razorpay Order Creation ---
-app.post('/razorpay-order', async (req, res) => {
+app.post('/api/razorpay-order', async (req, res) => {
     const { amount, currency, receipt } = req.body;
 
     const options = {
@@ -204,7 +204,7 @@ app.post('/razorpay-order', async (req, res) => {
 
 
 // --- Your existing endpoints ---
-app.post('/submit', (req, res) => {
+app.post('/api/submit', (req, res) => {
     const { name, email, phone, subject, message } = req.body;
     console.log("Contact form submission:", req.body);
 
@@ -225,7 +225,7 @@ app.post('/submit', (req, res) => {
     });
 });
 
-app.post('/create-order', (req, res) => {
+app.post('/api/create-order', (req, res) => {
     const { 
         packageName, 
         packagePrice, 
