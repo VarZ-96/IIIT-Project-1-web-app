@@ -83,7 +83,7 @@ app.get('/auth/google/callback',
   (req, res) => {
     // Successful authentication, redirect to the frontend.
     // NOTE: Make sure your frontend runs on this address or change it.
-    res.redirect('https://your-project-name.vercel.app');
+    res.redirect('https://iiit-project-1-web-app-varz-96s-projects.vercel.app/');
   }
 );
 // --- New Endpoint to Check Auth Status ---
@@ -105,7 +105,7 @@ app.get('/auth/status', (req, res) => {
 app.get('/logout', (req, res, next) => {
   req.logout(function(err) {
     if (err) { return next(err); }
-    res.redirect('https://your-project-name.vercel.app');
+    res.redirect('https://iiit-project-1-web-app-varz-96s-projects.vercel.app/');
   });
 });
 // --- Cart API Routes ---
