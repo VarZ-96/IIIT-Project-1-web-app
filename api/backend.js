@@ -8,6 +8,7 @@ const session = require('express-session');
 require('dotenv').config();
 
 const app = express();
+app.set('trust proxy', 1);
 const port = 3000;
 
 // --- Middleware Setup ---
