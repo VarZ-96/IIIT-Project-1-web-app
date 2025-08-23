@@ -13,7 +13,7 @@ window.onload=()=>{
         document.querySelector('.header').classList.remove('active');
     }
 };
-// --- Get Started Button Scroll Logic ---
+
 $('.botn').on('click', function(event) {
   // Find the activities section, which has the class 'second'
   var activitiesSection = $('.second');
