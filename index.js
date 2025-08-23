@@ -1,21 +1,22 @@
+const API_BASE_URL = 'https://your-project-name.vercel.app';
 // --- Check Login Status & Fetch Cart on Page Load ---
 let cart = []; // This will be populated from the database
 let isLoggedIn = false;
 
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('http://localhost:3000/auth/status', { credentials: 'include' })
+    fetch(`${API_BASE_URL}/auth/status`, { credentials: 'include' })
     .then(res => res.json())
     .then(data => {
         const authButton = document.getElementById('auth-button');
         if (data.loggedIn) {
             isLoggedIn = true;
             authButton.textContent = `Logout`;
-            authButton.href = "http://localhost:3000/logout";
+            authButton.href = `${API_BASE_URL}/logout`;
             fetchCart(); // Fetch the user's cart now that we know they're logged in
         } else {
             isLoggedIn = false;
             authButton.textContent = 'Sign in with Google';
-            authButton.href = 'http://localhost:3000/auth/google';
+            authButton.href = `${API_BASE_URL}/auth/google`;
         }
     });
 });
@@ -70,7 +71,7 @@ const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
 async function fetchCart() {
     if (!isLoggedIn) return;
     try {
-        const response = await fetch('http://localhost:3000/cart', { credentials: 'include' });
+        const response = await fetch(`${API_BASE_URL}/cart`, { credentials: 'include' });
         if (response.ok) {
             cart = await response.json();
             updateCartCounter();
@@ -90,7 +91,7 @@ async function addToCart(event) {
     const price = parseFloat(button.dataset.packagePrice);
 
     try {
-        const response = await fetch('http://localhost:3000/cart/add', {
+        const response = await fetch(`${API_BASE_URL}/cart/add`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -144,7 +145,7 @@ cartItemsList.addEventListener('click', async (event) => {
         const itemId = event.target.dataset.itemId;
         
         try {
-            const response = await fetch(`http://localhost:3000/cart/item/${itemId}`, {
+            const response = await fetch(`${API_BASE_URL}/cart/item/${itemId}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });
@@ -184,7 +185,7 @@ cartCheckoutForm.addEventListener('submit', async (e) => {
     const orderAmountInPaise = totalAmount * 100;
 
     try {
-        const orderResponse = await fetch('http://localhost:3000/razorpay-order', {
+        const orderResponse = await fetch(`${API_BASE_URL}/razorpay-order`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -201,7 +202,7 @@ cartCheckoutForm.addEventListener('submit', async (e) => {
             order_id: orderData.id,
             handler: async function (response) {
                 alert('Payment successful!');
-                await fetch('http://localhost:3000/cart/clear', { method: 'DELETE', credentials: 'include' });
+                await fetch(`${API_BASE_URL}/cart/clear`, { method: 'DELETE', credentials: 'include' });
                 cart = [];
                 updateCartCounter();
                 cartModal.classList.remove('visible');

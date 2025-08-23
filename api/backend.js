@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const db = require("./db");
+const db = require("../db");
 const Razorpay = require("razorpay");
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -12,7 +12,7 @@ const port = 3000;
 
 // --- Middleware Setup ---
 app.use(cors({
-    origin: 'http://localhost:5500', // Allow your frontend origin
+    origin: 'https://iiit-project-1-web-app-varz-96s-projects.vercel.app', // Allow your frontend origin
     credentials: true                // Allow cookies to be sent
 }));
 app.use(express.json());
@@ -83,7 +83,7 @@ app.get('/auth/google/callback',
   (req, res) => {
     // Successful authentication, redirect to the frontend.
     // NOTE: Make sure your frontend runs on this address or change it.
-    res.redirect('http://localhost:5500/index.html');
+    res.redirect('https://your-project-name.vercel.app');
   }
 );
 // --- New Endpoint to Check Auth Status ---
@@ -105,7 +105,7 @@ app.get('/auth/status', (req, res) => {
 app.get('/logout', (req, res, next) => {
   req.logout(function(err) {
     if (err) { return next(err); }
-    res.redirect('http://localhost:5500/index.html');
+    res.redirect('https://your-project-name.vercel.app');
   });
 });
 // --- Cart API Routes ---
