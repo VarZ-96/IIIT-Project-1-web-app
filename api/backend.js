@@ -33,7 +33,7 @@ app.use(passport.session());
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/auth/google/callback" // Relative path
+    callbackURL: "/api/auth/google/callback" // Add /api prefix
   },
   (accessToken, refreshToken, profile, done) => {
     const email = profile.emails[0].value;

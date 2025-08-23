@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://iiit-project-1-web-app-varz-96s-projects.vercel.app/';
+const API_BASE_URL = '/api';
 // --- Check Login Status & Fetch Cart on Page Load ---
 let cart = []; // This will be populated from the database
 let isLoggedIn = false;
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data.loggedIn) {
             isLoggedIn = true;
             authButton.textContent = `Logout`;
-            authButton.href = `${API_BASE_URL}/logout`;
+            authButton.href = "/api/logout";
             fetchCart(); // Fetch the user's cart now that we know they're logged in
         } else {
             isLoggedIn = false;
