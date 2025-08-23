@@ -160,24 +160,4 @@ checkoutForm.addEventListener('submit', async (e) => {
     rzp1.open();
 });
 
-  // --- THIS IS THE NEW PART ---
-  // Send the collected data to your backend endpoint
-  fetch('http://localhost:3000/create-order', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(orderDetails)
-  })
-  .then(res => res.json())
-  .then(data => {
-      console.log('Success:', data);
-      alert('Order submitted successfully!');
-  })
-  .catch((error) => {
-      console.error('Error:', error);
-      alert('There was an error submitting your order.');
-  });
-  
-  closeModal();
 });
