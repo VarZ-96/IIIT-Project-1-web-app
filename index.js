@@ -13,10 +13,7 @@ window.onload=()=>{
         document.querySelector('.header').classList.remove('active');
     }
 };
-<<<<<<< HEAD
 // --- Get Started Button Scroll Logic ---
-=======
->>>>>>> 703e65df8e3afdf5c845f84b045b8ae9bbf4676c
 $('.botn').on('click', function(event) {
   // Find the activities section, which has the class 'second'
   var activitiesSection = $('.second');
@@ -25,7 +22,6 @@ $('.botn').on('click', function(event) {
   $('html, body').animate({
     scrollTop: activitiesSection.offset().top
   }, 800); // 800 is the scroll speed in milliseconds
-});
 // --- NEW Smooth Scroll Logic ---
 $('.navbar a').on('click', function(event) {
   // Make sure this.hash has a value before overriding default behavior
@@ -89,19 +85,60 @@ window.addEventListener('click', (e) => {
 });
 
 // The checkoutForm event listener remains the same
-checkoutForm.addEventListener('submit', (e) => {
-  e.preventDefault(); // Prevent the default form submission
+checkoutForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-  // Collect all the data from the form
-  const orderDetails = {
-      packageName: modalPackageName.textContent,
-      packagePrice: modalPackagePrice.textContent,
-      customerName: document.getElementById('customer-name').value,
-      customerEmail: document.getElementById('customer-email').value,
-      customerAddress: document.getElementById('customer-address').value,
-      customerCity: document.getElementById('customer-city').value,
-      customerZip: document.getElementById('customer-zip').value,
-  };
+    const customerName = document.getElementById('customer-name').value;
+    const customerEmail = document.getElementById('customer-email').value;
+    const packageName = modalPackageName.textContent;
+    const packagePrice = modalPackagePrice.textContent;
+    const orderAmount = parseFloat(packagePrice) * 100;
+
+    const orderResponse = await fetch('http://localhost:3000/razorpay-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            amount: orderAmount,
+            currency: 'INR',
+            receipt: `receipt_${Date.now()}`
+        }),
+    });
+
+    const orderData = await orderResponse.json();
+    if (!orderData || !orderData.id) {
+        alert('Error creating your order. Please try again.');
+        return;
+    }
+
+    const options = {
+        key: "rzp_test_R8ohlt9hI8cn2W", // Your Razorpay Key ID
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "GARVV Tours & Travels",
+        description: `Payment for ${packageName}`,
+        order_id: orderData.id,
+        handler: function (response) {
+            alert('Payment successful! Payment ID: ' + response.razorpay_payment_id);
+            // After success, you can optionally save the final details
+            // to your database using the '/create-order' endpoint.
+            closeModal();
+        },
+        prefill: {
+            name: customerName,
+            email: customerEmail,
+            method: "upi"
+        },
+        theme: {
+            color: "#800080"
+        }
+    };
+
+    const rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response) {
+        alert('Payment failed: ' + response.error.description);
+    });
+    rzp1.open();
+});
 
   // --- THIS IS THE NEW PART ---
   // Send the collected data to your backend endpoint
