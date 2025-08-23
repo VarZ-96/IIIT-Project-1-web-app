@@ -16,7 +16,8 @@
             <a href="#activities">Activities</a>
             <a href="#packages">Packages</a>
             <a href="#contact">Contact</a>
-            <a href="http://localhost:3000/auth/google"  id="auth-button">Sign in with Google</a>
+            <a href="#" id="cart-btn" style="font-size: 1.1rem;">🛒 <span id="cart-counter">0</span></a>
+            <a href="http://localhost:3000/auth/google" id="auth-button">Sign in with Google</a>
         </nav>
     </div>
 
@@ -65,7 +66,7 @@
                 and a taste of paradise. Book your dream getaway today!<br><br> Package includes: 4N, 2 Flights,<br> 1 Hotel, 4 Activities, 2 Transfers</p>
             <h2>Rs. 1</h2><span>per person</span>
             <br>
-            <button class="add-to-cart-btn" data-package-name="Goa Package" data-package-price="1">Checkout</button>
+            <button class="add-to-cart-btn" data-package-name="Goa Package" data-package-price="1">Add to Cart</button>
         </div>
         <div class="packages"><img src="images/rajasthan.jpg">
             <br><h1>Rajasthan Package</h1>
@@ -76,7 +77,7 @@
                 breathtaking landscapes. Book your unforgettable journey now!<br><br> Package includes: 8N, 2 Flights,<br> 5 Hotels, 13 Activities, 9 Transfers</p>
                 <h2>Rs. 1</h2><span>per person</span>
                 <br>
-                <button class="add-to-cart-btn" data-package-name="Rajasthan Package" data-package-price="1">Checkout</button>
+                <button class="add-to-cart-btn" data-package-name="Rajasthan Package" data-package-price="1">Add to Cart</button>
         </div>
         <div class="packages"><img src="images/shimla.webp">
             <br><h1>Himachal Package</h1>
@@ -88,7 +89,7 @@
                 hill station. Book your getaway today!<br><br> Package includes: 5N, 2 Flights,<br> 1 Hotel, 6 Activities, 4 Transfers</p>
                 <h2>Rs. 1</h2><span>per person</span>
                 <br>
-                <button class="add-to-cart-btn" data-package-name="Himachal Package" data-package-price="1">Checkout</button>
+                <button class="add-to-cart-btn" data-package-name="Himachal Package" data-package-price="1">Add to Cart</button>
         </div>
         <div class="packages one"><img src="images/dubai.jpg">
             <br><h1>Dubai Package</h1>
@@ -101,7 +102,7 @@
                 gems. Book your unforgettable journey now!<br><br> Package includes: 5N, 2 Flights,<br> 1 Hotel, 3 Activities, 2 Transfers</p>
                 <h2>Rs. 1</h2><span>per person</span>
                 <br>
-                <button class="add-to-cart-btn" data-package-name="Dubai Package" data-package-price="1">Checkout</button>
+                <button class="add-to-cart-btn" data-package-name="Dubai Package" data-package-price="1">Add to Cart</button>
         </div>
         <div class="packages"><img src="images/singapore.webp">
             <br><h1>Singapore Package</h1>
@@ -113,7 +114,7 @@
                 sights and sounds. Book your adventure today!<br><br> Package includes: 8N, 2 Flights,<br> 4 Hotels, 7 Activies, 2 Transfers</p>
                 <h2>Rs. 1</h2><span>per person</span>
                 <br>
-                <button class="add-to-cart-btn" data-package-name="Singapore Package" data-package-price="1">Checkout</button>
+                <button class="add-to-cart-btn" data-package-name="Singapore Package" data-package-price="1">Add to Cart</button>
         </div>
         <div class="packages"><img src="images/thailand.jpg">
             <br><h1>Thailand Package</h1>
@@ -126,7 +127,7 @@
                 Thai adventure today!<br><br> Package includes: 6N, 2 Flights,<br> 2 Hotels, 9 Activities, 2 Transfers</p>
                 <h2>Rs. 1</h2><span>per person</span>
                 <br>
-                <button class="add-to-cart-btn" data-package-name="Thailand Package" data-package-price="1">Checkout</button>
+                <button class="add-to-cart-btn" data-package-name="Thailand Package" data-package-price="1">Add to Cart</button>
         </div>
 
     </div>
@@ -177,6 +178,23 @@
 
     <h3>Your Adventure Awaits<br>©2024 <span class="logo1">GARVV</span> | Designed by <span class="logo1">GARVV</span></h3>
 </section>
+<div id="cart-modal" class="modal-overlay">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>Your Cart</h2>
+        <ul id="cart-items-list" style="list-style-type: none; padding: 0;">
+            </ul>
+        <hr>
+        <h3>Total: ₹<span id="cart-total">0.00</span></h3>
+        <hr>
+        <form id="cart-checkout-form">
+            <h3>Customer Details</h3>
+            <input type="text" id="cart-customer-name" placeholder="Full Name" required>
+            <input type="email" id="cart-customer-email" placeholder="Email Address" required>
+            <button type="submit" class="btn1">Proceed to Payment</button>
+        </form>
+    </div>
+</div>
 <div id="checkout-modal" class="modal-overlay">
     <div class="modal-content">
         <span class="close-btn">&times;</span>

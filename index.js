@@ -1,20 +1,23 @@
-// --- Check Login Status on Page Load ---
+// --- Check Login Status & Fetch Cart on Page Load ---
+let cart = []; // This will be populated from the database
+let isLoggedIn = false;
+
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('http://localhost:3000/auth/status', {
-        credentials: 'include' // This tells the browser to send cookies
-    })
+    fetch('http://localhost:3000/auth/status', { credentials: 'include' })
     .then(res => res.json())
     .then(data => {
         const authButton = document.getElementById('auth-button');
         if (data.loggedIn) {
+            isLoggedIn = true;
             authButton.textContent = `Logout`;
             authButton.href = "http://localhost:3000/logout";
+            fetchCart(); // Fetch the user's cart now that we know they're logged in
         } else {
+            isLoggedIn = false;
             authButton.textContent = 'Sign in with Google';
             authButton.href = 'http://localhost:3000/auth/google';
         }
-    })
-    .catch(error => console.error('Error checking auth status:', error));
+    });
 });
 
 // --- Header Scroll Effect ---
@@ -43,7 +46,7 @@ $('.botn').on('click', function(event) {
 
 // --- Navbar Smooth Scroll Logic ---
 $('.navbar a').on('click', function(event) {
-    if (this.hash !== "") {
+    if (this.hash !== "" && this.id !== "cart-btn") {
         event.preventDefault();
         var hash = this.hash;
         $('html, body').animate({
@@ -54,100 +57,163 @@ $('.navbar a').on('click', function(event) {
     }
 });
 
-// --- Checkout Modal and Payment Logic ---
-const modal = document.getElementById('checkout-modal');
-const closeBtn = modal.querySelector('.close-btn'); // Correctly scoped to modal
+// --- NEW DATABASE-DRIVEN CART LOGIC ---
+const cartBtn = document.getElementById('cart-btn');
+const cartModal = document.getElementById('cart-modal');
+const cartItemsList = document.getElementById('cart-items-list');
+const cartTotalSpan = document.getElementById('cart-total');
+const cartCounterSpan = document.getElementById('cart-counter');
+const cartCheckoutForm = document.getElementById('cart-checkout-form');
+const closeCartModalBtn = cartModal.querySelector('.close-btn');
 const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
-const modalPackageName = document.getElementById('modal-package-name');
-const modalPackagePrice = document.getElementById('modal-package-price');
-const checkoutForm = document.getElementById('checkout-form');
 
-// Function to open the modal
-const openModal = (e) => {
-    const packageName = e.target.getAttribute('data-package-name');
-    const packagePrice = e.target.getAttribute('data-package-price');
+async function fetchCart() {
+    if (!isLoggedIn) return;
+    try {
+        const response = await fetch('http://localhost:3000/cart', { credentials: 'include' });
+        if (response.ok) {
+            cart = await response.json();
+            updateCartCounter();
+        }
+    } catch (error) {
+        console.error('Error fetching cart:', error);
+    }
+}
 
-    modalPackageName.textContent = packageName;
-    modalPackagePrice.textContent = packagePrice;
+async function addToCart(event) {
+    if (!isLoggedIn) {
+        alert('Please sign in to add items to your cart.');
+        return;
+    }
+    const button = event.target;
+    const name = button.dataset.packageName;
+    const price = parseFloat(button.dataset.packagePrice);
 
-    modal.classList.add('visible');
-};
+    try {
+        const response = await fetch('http://localhost:3000/cart/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ name, price })
+        });
+        if (response.ok) {
+            await fetchCart(); // Re-fetch the cart from the DB to have the latest data
+            alert(`"${name}" has been added to your cart!`);
+        } else {
+            alert('Failed to add item. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error adding to cart:', error);
+    }
+}
 
-// Function to close the modal
-const closeModal = () => {
-    modal.classList.remove('visible');
-};
+function updateCartCounter() {
+    cartCounterSpan.textContent = cart.length;
+}
 
-// Add click event listeners to all "Checkout" buttons
-addToCartButtons.forEach(button => {
-    button.addEventListener('click', openModal);
-});
+function displayCart() {
+    cartItemsList.innerHTML = '';
+    let total = 0;
 
-// Add click event listener for the close button
-closeBtn.addEventListener('click', closeModal);
+    if (cart.length === 0) {
+        cartItemsList.innerHTML = '<li>Your cart is empty.</li>';
+    } else {
+        cart.forEach(item => {
+            const li = document.createElement('li');
+            const itemTotal = Number(item.price) * item.quantity; // Calculate total for this line item
+            
+            // Display the name, quantity, and total for the item
+            li.innerHTML = `
+                <span>${item.package_name} (x${item.quantity})</span>
+                <span>
+                    ₹${itemTotal.toFixed(2)}
+                    <button class="remove-item-btn" data-item-id="${item.id}" style="margin-left: 15px; color: red; border: none; background: none; cursor: pointer;">&times;</button>
+                </span>
+            `;
+            cartItemsList.appendChild(li);
+            total += itemTotal; // Add the line item total to the grand total
+        });
+    }
 
-// Close the modal if the user clicks anywhere on the overlay
-window.addEventListener('click', (e) => {
-    if (e.target == modal) {
-        closeModal();
+    cartTotalSpan.textContent = total.toFixed(2);
+    cartModal.classList.add('visible');
+}
+// Handle clicks on the remove item button
+cartItemsList.addEventListener('click', async (event) => {
+    if (event.target.classList.contains('remove-item-btn')) {
+        const itemId = event.target.dataset.itemId;
+        
+        try {
+            const response = await fetch(`http://localhost:3000/cart/item/${itemId}`, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                // If successful, refresh the cart from the server and re-display it
+                await fetchCart();
+                displayCart();
+            } else {
+                alert('Failed to remove item. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error removing item:', error);
+        }
     }
 });
-
-// Handle form submission for payment
-checkoutForm.addEventListener('submit', async (e) => {
+// Event Listeners for Cart
+addToCartButtons.forEach(button => button.addEventListener('click', addToCart));
+cartBtn.addEventListener('click', (e) => {
     e.preventDefault();
+    if (!isLoggedIn) return alert('Please sign in to view your cart.');
+    displayCart();
+});
+closeCartModalBtn.addEventListener('click', () => cartModal.classList.remove('visible'));
+window.addEventListener('click', (e) => {
+    if (e.target == cartModal) cartModal.classList.remove('visible');
+});
 
-    const customerName = document.getElementById('customer-name').value;
-    const customerEmail = document.getElementById('customer-email').value;
-    const packageName = modalPackageName.textContent;
-    const packagePrice = modalPackagePrice.textContent;
-    const orderAmount = parseFloat(packagePrice) * 100;
+// Final Checkout and Payment Logic
+cartCheckoutForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const totalAmount = parseFloat(cartTotalSpan.textContent);
+    if (totalAmount <= 0) return alert("Cannot checkout with an empty cart!");
+
+    const customerName = document.getElementById('cart-customer-name').value;
+    const customerEmail = document.getElementById('cart-customer-email').value;
+    const orderAmountInPaise = totalAmount * 100;
 
     try {
         const orderResponse = await fetch('http://localhost:3000/razorpay-order', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                amount: orderAmount,
-                currency: 'INR',
-                receipt: `receipt_${Date.now()}`
-            }),
+            credentials: 'include',
+            body: JSON.stringify({ amount: orderAmountInPaise, currency: 'INR', receipt: `receipt_cart_${Date.now()}` }),
         });
-
         const orderData = await orderResponse.json();
-        if (!orderData || !orderData.id) {
-            alert('Error creating your order. Please try again.');
-            return;
-        }
-
+        
         const options = {
-            key: "rzp_test_R8ohlt9hI8cn2W", // Your Razorpay Key ID
+            key: "rzp_test_R8ohlt9hI8cn2W", // Add your key
             amount: orderData.amount,
-            currency: orderData.currency,
+            currency: "INR",
             name: "GARVV Tours & Travels",
-            description: `Payment for ${packageName}`,
+            description: "Payment for tour packages",
             order_id: orderData.id,
-            handler: function(response) {
-                alert('Payment successful! Payment ID: ' + response.razorpay_payment_id);
-                closeModal();
+            handler: async function (response) {
+                alert('Payment successful!');
+                await fetch('http://localhost:3000/cart/clear', { method: 'DELETE', credentials: 'include' });
+                cart = [];
+                updateCartCounter();
+                cartModal.classList.remove('visible');
             },
-            prefill: {
-                name: customerName,
-                email: customerEmail,
-                method: "upi"
-            },
-            theme: {
-                color: "#800080"
-            }
+            prefill: { name: customerName, email: customerEmail },
+            theme: { color: "#800080" }
         };
 
         const rzp1 = new Razorpay(options);
-        rzp1.on('payment.failed', function(response) {
-            alert('Payment failed: ' + response.error.description);
-        });
+        rzp1.on('payment.failed', (response) => alert('Payment failed: ' + response.error.description));
         rzp1.open();
     } catch (error) {
-        console.error('Error during checkout:', error);
-        alert('An error occurred. Please try again.');
+        console.error('Checkout Error:', error);
     }
 });

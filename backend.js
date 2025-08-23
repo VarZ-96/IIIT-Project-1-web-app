@@ -66,7 +66,13 @@ passport.deserializeUser((user, done) => {
     // You can skip the database call here if the full user object is in the session
     done(null, user);
 });
-
+// Middleware to check if the user is authenticated
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.status(401).json({ error: 'You must be logged in to do that.' });
+}
 // --- Auth Routes ---
 app.get('/auth/google',
   passport.authenticate('google', { scope: ['profile', 'email'] })
@@ -101,6 +107,74 @@ app.get('/logout', (req, res, next) => {
     if (err) { return next(err); }
     res.redirect('http://localhost:5500/index.html');
   });
+});
+// --- Cart API Routes ---
+
+// GET current user's cart
+app.get('/cart', ensureAuthenticated, (req, res) => {
+    const userId = req.user.id;
+    db.query('SELECT * FROM cart_items WHERE user_id = $1 ORDER BY added_at', [userId], (err, result) => {
+        if (err) {
+            console.error('Error fetching cart:', err.stack);
+            return res.status(500).json({ error: 'Server error' });
+        }
+        res.json(result.rows);
+    });
+});
+
+// ADD an item to the cart
+// ADD an item to the cart (with quantity handling)
+app.post('/cart/add', ensureAuthenticated, (req, res) => {
+    const userId = req.user.id;
+    const { name, price } = req.body;
+
+    // This SQL statement will insert a new item, but if it already exists
+    // (based on the unique_user_package constraint), it will update the quantity instead.
+    const sql = `
+        INSERT INTO cart_items (user_id, package_name, price, quantity)
+        VALUES ($1, $2, $3, 1)
+        ON CONFLICT (user_id, package_name)
+        DO UPDATE SET quantity = cart_items.quantity + 1
+        RETURNING *;
+    `;
+
+    db.query(sql, [userId, name, price], (err, result) => {
+        if (err) {
+            console.error('Error adding/updating cart:', err.stack);
+            return res.status(500).json({ error: 'Server error' });
+        }
+        res.status(201).json(result.rows[0]);
+    });
+});
+// REMOVE an item from the cart
+app.delete('/cart/item/:id', ensureAuthenticated, (req, res) => {
+    const itemId = req.params.id;
+    const userId = req.user.id;
+
+    // The query ensures a user can only delete their own cart items
+    const sql = 'DELETE FROM cart_items WHERE id = $1 AND user_id = $2';
+    
+    db.query(sql, [itemId, userId], (err, result) => {
+        if (err) {
+            console.error('Error removing item from cart:', err.stack);
+            return res.status(500).json({ error: 'Server error' });
+        }
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Item not found or you do not have permission to remove it.' });
+        }
+        res.status(200).json({ message: 'Item removed successfully.' });
+    });
+});
+// CLEAR the user's cart (e.g., after payment)
+app.delete('/cart/clear', ensureAuthenticated, (req, res) => {
+    const userId = req.user.id;
+    db.query('DELETE FROM cart_items WHERE user_id = $1', [userId], (err, result) => {
+        if (err) {
+            console.error('Error clearing cart:', err.stack);
+            return res.status(500).json({ error: 'Server error' });
+        }
+        res.status(200).json({ message: 'Cart cleared successfully.' });
+    });
 });
 // --- Initialize Razorpay ---
 const razorpay = new Razorpay({
