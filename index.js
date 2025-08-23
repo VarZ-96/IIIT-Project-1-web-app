@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://your-project-name.vercel.app';
+const API_BASE_URL = 'https://iiit-project-1-web-app-varz-96s-projects.vercel.app/';
 // --- Check Login Status & Fetch Cart on Page Load ---
 let cart = []; // This will be populated from the database
 let isLoggedIn = false;
