@@ -13,6 +13,15 @@ window.onload=()=>{
         document.querySelector('.header').classList.remove('active');
     }
 };
+$('.botn').on('click', function(event) {
+  // Find the activities section, which has the class 'second'
+  var activitiesSection = $('.second');
+
+  // Animate the scroll to that section
+  $('html, body').animate({
+    scrollTop: activitiesSection.offset().top
+  }, 800); // 800 is the scroll speed in milliseconds
+});
 // --- NEW Smooth Scroll Logic ---
 $('.navbar a').on('click', function(event) {
   // Make sure this.hash has a value before overriding default behavior
