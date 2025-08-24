@@ -697,6 +697,9 @@ ul li{
         text-align: center;
         display: block;
     }
+    .contact-form {
+        flex-direction: column; /* Stack the columns vertically on mobile */
+    }
 }
 /* --- Hamburger Menu & Mobile Navigation --- */
 
