@@ -141,21 +141,16 @@ h2{
     padding: 0;
 }
 .second{
-    margin-top: 0;
-    padding-top: 0;
-    height: 700px;
     width: 100%;
-
+    padding: 5rem 0; /* Add space on top and bottom */
 }
 .third{
-    height: 1750px;
     width: 100%;
     background-color: rgb(228, 228, 228);
-    margin: 0;
-    padding: 0;
+    padding: 5rem 0; /* Add space on top and bottom */
 }
 .fourth{
-    height: 1000px;
+    padding: 5rem 0;
     width: 100%;
     background-image: url("images/tour.jpg");
     background-position: center;
@@ -232,7 +227,8 @@ h2{
     background-color: white;
     border: 2.5px solid purple;
     height: 700px;
-    width: 400px;
+    width: 100%;
+    max-width: 400px;
     text-align: center;
     border-radius: 10px;
 }
@@ -592,4 +588,78 @@ ul li{
 }
 #order-history-list th {
   background-color: #f2f2f2;
+}
+/* --- Responsive Styles for Mobile and Tablet --- */
+@media (max-width: 768px) {
+
+    /* --- Header & Navbar --- */
+    .header {
+        flex-direction: column; /* Stack logo and nav links vertically */
+        align-items: center;
+        padding: 1rem;
+    }
+
+    .navbar {
+        flex-direction: column; /* Stack nav links vertically */
+        align-items: center;
+        margin-top: 1rem;
+    }
+
+    .navbar a {
+        margin: 0.5rem 0; /* Add vertical spacing for nav links */
+    }
+
+    /* --- Hero Section --- */
+    .element {
+        padding-top: 25vh; /* Adjust spacing for smaller screens */
+    }
+
+    .start {
+        margin-left: 0; /* Remove the large left margin on the button */
+        display: block;
+        width: 80%;
+        margin: 2rem auto 0;
+        text-align: center;
+    }
+
+    /* --- Activities Section --- */
+    .container {
+        grid-template-columns: 1fr; /* Change 3-column grid to a 1-column stack */
+        gap: 2rem;
+    }
+
+    /* --- Packages Section --- */
+    .package-container {
+        grid-template-columns: 1fr; /* Change 3-column grid to a 1-column stack */
+        padding: 0 1rem;
+    }
+    
+    .packages {
+        height: auto; /* Allow height to adjust to content */
+        padding-bottom: 1rem;
+    }
+    
+    /* --- Contact Form Section --- */
+    .wrapper1 {
+        width: 90%;
+        transform: none; /* Reset the transform */
+        margin: 5rem auto 0;
+        left: 0;
+        top: 0;
+    }
+    
+    .input-fields, .msg {
+        width: 100%;
+    }
+    
+    .msg {
+        margin-left: 0;
+        transform: none;
+    }
+    
+    .cont {
+        margin-left: 0;
+        text-align: center;
+        display: block;
+    }
 }
