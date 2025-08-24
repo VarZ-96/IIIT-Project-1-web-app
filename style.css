@@ -338,74 +338,76 @@ ul li{
 
 
 
-
-  
-  .uil {
-    height: 50px;
-    width: 50px;
-  }
-  /* --- NEW Contact Form Styles --- */
 .wrapper1 {
-    /* Replaces transform for better centering */
-    margin: 10rem auto 0 auto; 
-    max-width: 800px; /* Max width for the form container */
-    width: 90%;
-
-    /* Glassmorphism styles remain the same */
+    height: 45%;
+    width: 30%;
+    top: 50%;
+    left: 50%;
+    transform: translate(110%,38%);
     background: rgba( 255, 255, 255, 0.25 );
     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
     backdrop-filter: blur( 4px );
     -webkit-backdrop-filter: blur( 4px );
     border-radius: 10px;
     border: 1px solid rgba( 255, 255, 255, 0.18 ); 
-
-    padding: 2rem;
-    height: auto; /* Let content define the height */
-}
-
-  .wrapper1 .title1 {
-      text-align: center;
-      margin-bottom: 2rem;
+    padding: 0.8rem;
   }
-
+  
   .wrapper1 .title1 h1 {
-      background: linear-gradient(to right,#046b9e,#d33390);
-      background-clip: text;
-      color: transparent;
-      font-size: 2.5rem;
-      margin: 0;
-  }
+    margin-top: 5rem;
+    background: linear-gradient(to right,#046b9e,#d33390);
+    background-clip: text;
+    color: transparent;
+    display: inline;
+    cursor: pointer;
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 25px;
 
+  }
+  
   .contact-form {
-      display: flex; /* Create a two-column layout */
-      gap: 2rem;     /* Add space between the columns */
+    display: flex;
   }
-
-  .input-fields, .msg {
-      flex: 1; /* Make both columns take up equal space */
-      display: flex;
-      flex-direction: column;
+  
+  .uil {
+    height: 50px;
+    width: 50px;
   }
-
-  .input-fields .input, .msg textarea {
-      width: 100%; /* Make inputs fill their column */
-      margin-bottom: 1rem;
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid #635f668f;
-      padding: 10px;
-      color: black;
-      box-sizing: border-box; /* Ensures padding is included in width */
+  
+  .input-fields {
+    display: flex;
+    flex-direction: column;
+    margin-right: 4%;
   }
-
+  
+  .input-fields,
+  .msg {
+    width: 60%;
+  }
+  
+  .input-fields .input,
   .msg textarea {
-      flex-grow: 1; /* Allow textarea to fill available vertical space */
-      min-height: 150px;
+    margin: 10px 0;
+    background: transparent;
+    border: 0px;
+    border-bottom: 2px solid #635f668f;
+    padding: 10px;
+    color: black;
+    width: 70%;
   }
-
+  
+  .msg textarea {
+    height: 189px;
+  }
   .msg .btn1 {
-      margin-top: 1rem;
-      text-align: center;
+    margin-top: 1rem;
+    display: inline-block;
+    color: purple;
+    cursor: pointer;
+    font-size: 1.7rem;
+    padding: 1rem 3rem;
+    background: none;
   }
   .btn1 {
     padding: 1rem;
@@ -617,16 +619,16 @@ ul li{
       text-align: left;
     }
     /* --- Responsive Button Sizes --- */
-    .start {
-      font-size: 1rem;    /* Make font smaller */
-      padding: 0.8rem;    /* Reduce padding */
-    }
+  .start {
+    font-size: 1rem;    /* Make font smaller */
+    padding: 0.8rem;    /* Reduce padding */
+  }
 
-    .contact-form .btn1 {
-      font-size: 1.1rem;  /* Make font smaller */
-      padding: 0.8rem 1.5rem; /* Reduce padding */
-      width: 100%;      /* Make it full-width inside its container */
-    }
+  .contact-form .btn1 {
+    font-size: 1.1rem;  /* Make font smaller */
+    padding: 0.8rem 1.5rem; /* Reduce padding */
+    width: 100%;      /* Make it full-width inside its container */
+  }
     /* --- Header & Navbar --- */
     .header {
         flex-direction: column; /* Stack logo and nav links vertically */
@@ -696,9 +698,6 @@ ul li{
         margin-left: 0;
         text-align: center;
         display: block;
-    }
-    .contact-form {
-        flex-direction: column; /* Stack the columns vertically on mobile */
     }
 }
 /* --- Hamburger Menu & Mobile Navigation --- */
