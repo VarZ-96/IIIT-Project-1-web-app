@@ -201,7 +201,7 @@ cartCheckoutForm.addEventListener('submit', async (e) => {
             key: "rzp_test_R8ohlt9hI8cn2W", // Your public Key ID
             amount: orderData.amount,
             currency: "INR",
-            name: "GARVV Tours & Travels",
+            name: "VarZ Tours & Travels",
             description: "Payment for tour packages",
             order_id: orderData.id,
             handler: async function (response) {
