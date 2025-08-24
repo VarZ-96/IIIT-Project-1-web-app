@@ -193,47 +193,53 @@ cartCheckoutForm.addEventListener('submit', async (e) => {
         });
         const orderData = await orderResponse.json();
         
+        if (!orderResponse.ok || !orderData.id) {
+            throw new Error('Failed to create Razorpay order.');
+        }
+
         const options = {
-            key: "rzp_test_R8ohlt9hI8cn2W", // Add your key
+            key: "rzp_test_R8ohlt9hI8cn2W", // Your public Key ID
             amount: orderData.amount,
             currency: "INR",
             name: "GARVV Tours & Travels",
             description: "Payment for tour packages",
             order_id: orderData.id,
-            // Replace with this:
-handler: async function (response) {
-    alert('Payment successful! Payment ID: ' + response.razorpay_payment_id);
+            handler: async function (response) {
+                alert('Payment successful! Payment ID: ' + response.razorpay_payment_id);
+                const customerDetails = {
+                    name: document.getElementById('cart-customer-name').value,
+                    email: document.getElementById('cart-customer-email').value,
+                };
+                await fetch(`${API_BASE_URL}/create-order`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        cart: cart,
+                        customerDetails: customerDetails,
+                        paymentId: response.razorpay_payment_id
+                    })
+                });
+                await fetch(`${API_BASE_URL}/cart/clear`, { method: 'DELETE', credentials: 'include' });
+                cart = [];
+                updateCartCounter();
+                cartModal.classList.remove('visible');
+            },
+            prefill: { name: customerName, email: customerEmail },
+            theme: { color: "#800080" }
+        };
 
-    // Save the successful order to the database
-    const customerDetails = {
-        name: document.getElementById('cart-customer-name').value,
-        email: document.getElementById('cart-customer-email').value,
-    };
-    await fetch('/api/create-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({
-            cart: cart,
-            customerDetails: customerDetails,
-            paymentId: response.razorpay_payment_id // Corrected variable name
-        })
-    });
-
-    // Clear the cart from the database
-    await fetch('/api/cart/clear', { method: 'DELETE', credentials: 'include' });
-    cart = [];
-    updateCartCounter();
-    cartModal.classList.remove('visible');
-    },
-        prefill: { name: customerName, email: customerEmail },
-        theme: { color: "#800080" }
-    };
+        // --- THESE LINES WERE MISSING ---
         const rzp1 = new Razorpay(options);
-        rzp1.on('payment.failed', (response) => alert('Payment failed: ' + response.error.description));
+        rzp1.on('payment.failed', (response) => {
+            alert('Payment failed: ' + response.error.description);
+        });
         rzp1.open();
+        // -----------------------------
+
     } catch (error) {
         console.error('Checkout Error:', error);
+        alert('An error occurred during checkout. Please check the console for details.');
     }
 });
 // --- ORDER HISTORY LOGIC ---
