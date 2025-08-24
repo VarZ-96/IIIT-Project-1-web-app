@@ -592,7 +592,43 @@ ul li{
 }
 /* --- Responsive Styles for Mobile and Tablet --- */
 @media (max-width: 768px) {
+    /* --- Responsive Order History Table --- */
+    #order-history-list table thead {
+      display: none; /* Hide the table headers on mobile */
+    }
 
+    #order-history-list table tr {
+      display: block; /* Make each row its own block */
+      border: 1px solid #ddd;
+      margin-bottom: 1rem;
+    }
+
+    #order-history-list table td {
+      display: block; /* Stack table cells vertically */
+      text-align: right; /* Align text to the right */
+      padding-left: 50%; /* Make space for the label */
+      position: relative;
+      border-bottom: 1px solid #eee;
+    }
+
+    #order-history-list table td::before {
+      content: attr(data-label); /* Use the data-label as the text */
+      position: absolute;
+      left: 10px;
+      font-weight: bold;
+      text-align: left;
+    }
+    /* --- Responsive Button Sizes --- */
+    .start {
+      font-size: 1rem;    /* Make font smaller */
+      padding: 0.8rem;    /* Reduce padding */
+    }
+
+    .contact-form .btn1 {
+      font-size: 1.1rem;  /* Make font smaller */
+      padding: 0.8rem 1.5rem; /* Reduce padding */
+      width: 100%;      /* Make it full-width inside its container */
+    }
     /* --- Header & Navbar --- */
     .header {
         flex-direction: column; /* Stack logo and nav links vertically */
@@ -662,5 +698,62 @@ ul li{
         margin-left: 0;
         text-align: center;
         display: block;
+    }
+}
+/* --- Hamburger Menu & Mobile Navigation --- */
+
+#hamburger-btn {
+    display: none; /* Hidden on desktop */
+    flex-direction: column;
+    justify-content: space-around;
+    width: 2rem;
+    height: 2rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 10;
+}
+
+#hamburger-btn span {
+    width: 2rem;
+    height: 0.25rem;
+    background: #333;
+    border-radius: 10px;
+    transition: all 0.3s linear;
+    position: relative;
+    transform-origin: 1px;
+}
+
+/* --- Responsive Styles for Mobile and Tablet --- */
+@media (max-width: 768px) {
+    .header {
+        justify-content: space-between; /* Space between logo and hamburger */
+        align-items: center;
+    }
+    
+    #hamburger-btn {
+        display: flex; /* Show the button on mobile */
+    }
+
+    .navbar {
+        display: none; /* Hide the navbar by default on mobile */
+        position: absolute;
+        top: 100%; /* Position it below the header */
+        left: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.9);
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem 0;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+    
+    .navbar.active {
+        display: flex; /* Show the navbar when it has the 'active' class */
+    }
+
+    .navbar a {
+        margin: 1rem 0;
     }
 }

@@ -277,10 +277,10 @@ async function displayOrderHistory() {
                 <tbody>
                     ${orders.map(order => `
                         <tr>
-                            <td>${new Date(order.created_at).toLocaleDateString()}</td>
-                            <td>${order.package_name}</td>
-                            <td>₹${Number(order.price).toFixed(2)}</td>
-                            <td>${order.razorpay_payment_id}</td>
+                            <td data-label="Date">${new Date(order.created_at).toLocaleDateString()}</td>
+                            <td data-label="Items">${order.package_name}</td>
+                            <td data-label="Amount">₹${Number(order.price).toFixed(2)}</td>
+                            <td data-label="Payment ID">${order.razorpay_payment_id}</td>
                         </tr>
                     `).join('')}
                 </tbody>
@@ -300,4 +300,21 @@ orderHistoryBtn.addEventListener('click', (e) => {
 
 closeOrderHistoryModalBtn.addEventListener('click', () => {
     orderHistoryModal.classList.remove('visible');
+});
+// --- Hamburger Menu Toggle Logic ---
+const hamburgerBtn = document.getElementById('hamburger-btn');
+const navbar = document.querySelector('.navbar');
+const navLinks = document.querySelectorAll('.navbar a');
+
+hamburgerBtn.addEventListener('click', () => {
+    navbar.classList.toggle('active'); // Toggles the menu's visibility
+});
+
+// Close the menu when a link is clicked
+navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        if (navbar.classList.contains('active')) {
+            navbar.classList.remove('active');
+        }
+    });
 });
