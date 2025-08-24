@@ -142,15 +142,15 @@ h2{
 }
 .second{
     width: 100%;
-    padding: 5rem 0; /* Add space on top and bottom */
+    padding: 3rem 0; /* Add space on top and bottom */
 }
 .third{
     width: 100%;
     background-color: rgb(228, 228, 228);
-    padding: 5rem 0; /* Add space on top and bottom */
+    padding: 3rem 0; /* Add space on top and bottom */
 }
 .fourth{
-    padding: 5rem 0;
+    padding: 3rem 0;
     width: 100%;
     background-image: url("images/tour.jpg");
     background-position: center;
