@@ -230,16 +230,29 @@ app.post('/api/create-order', ensureAuthenticated, (req, res) => {
     const { cart, customerDetails, paymentId } = req.body;
     const userId = req.user.id;
 
-    // Create a summary of the package names
     const packageNames = cart.map(item => `${item.package_name} (x${item.quantity})`).join(', ');
     const totalPrice = cart.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
 
+    // --- Updated SQL statement with address columns ---
     const sql = `
         INSERT INTO orders 
-        (package_name, price, customer_name, email, user_id, razorpay_payment_id) 
-        VALUES ($1, $2, $3, $4, $5, $6) RETURNING id
+        (package_name, price, customer_name, email, user_id, razorpay_payment_id, status, address, city, zip) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id
     `;
-    const values = [packageNames, totalPrice, customerDetails.name, customerDetails.email, userId, paymentId];
+    
+    // --- Updated values array with address details ---
+    const values = [
+        packageNames, 
+        totalPrice, 
+        customerDetails.name, 
+        customerDetails.email, 
+        userId, 
+        paymentId, 
+        'completed', 
+        customerDetails.address, 
+        customerDetails.city, 
+        customerDetails.zip
+    ];
 
     db.query(sql, values, (err, result) => {
         if (err) {

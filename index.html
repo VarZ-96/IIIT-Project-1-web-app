@@ -191,30 +191,9 @@
             <h3>Customer Details</h3>
             <input type="text" id="cart-customer-name" placeholder="Full Name" required>
             <input type="email" id="cart-customer-email" placeholder="Email Address" required>
-            <button type="submit" class="btn1">Proceed to Payment</button>
-        </form>
-    </div>
-</div>
-<div id="checkout-modal" class="modal-overlay">
-    <div class="modal-content">
-        <span class="close-btn">&times;</span>
-        <h2>Checkout</h2>
-        <p>You are purchasing: <strong id="modal-package-name"></strong></p>
-        <p>Price: ₹<strong id="modal-package-price"></strong></p>
-
-        <form id="checkout-form">
-            <h3>Shipping & Billing Information</h3>
-            <input type="text" id="customer-name" placeholder="Full Name" required>
-            <input type="email" id="customer-email" placeholder="Email Address" required>
-            <input type="text" id="customer-address" placeholder="Full Address" required>
-            <input type="text" id="customer-city" placeholder="City" required>
-            <input type="text" id="customer-zip" placeholder="PIN Code" required>
-
-            <h3 style="cursor:pointer;">Payment Details</h3>
-            <div id="payment-gateway-placeholder">
-                <p><em>Secure payment processing will be handled here.</em></p>
-            </div>
-
+            <input type="text" id="cart-customer-address" placeholder="Full Address" required>
+            <input type="text" id="cart-customer-city" placeholder="City" required>
+            <input type="text" id="cart-customer-zip" placeholder="PIN Code" required>
             <button type="submit" class="btn1">Proceed to Payment</button>
         </form>
     </div>

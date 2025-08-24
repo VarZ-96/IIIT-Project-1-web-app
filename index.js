@@ -209,6 +209,9 @@ cartCheckoutForm.addEventListener('submit', async (e) => {
                 const customerDetails = {
                     name: document.getElementById('cart-customer-name').value,
                     email: document.getElementById('cart-customer-email').value,
+                    address: document.getElementById('cart-customer-address').value,
+                    city: document.getElementById('cart-customer-city').value,
+                    zip: document.getElementById('cart-customer-zip').value,
                 };
                 await fetch(`${API_BASE_URL}/create-order`, {
                     method: 'POST',
