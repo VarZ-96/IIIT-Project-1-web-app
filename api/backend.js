@@ -251,6 +251,9 @@ app.post('/api/create-order', ensureAuthenticated, (req, res) => {
 });
 // GET the current user's order history
 app.get('/api/orders', ensureAuthenticated, (req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     const userId = req.user.id;
     const sql = `
         SELECT package_name, price, razorpay_payment_id, created_at 
