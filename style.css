@@ -142,7 +142,8 @@ h2{
 }
 .second{
     width: 100%;
-    padding: 1.5rem 0; /* Add space on top and bottom */
+    padding: 1.5rem 0;
+    padding-bottom: 3rem; /* Add space on top and bottom */
 }
 .third{
     width: 100%;
@@ -335,9 +336,6 @@ ul li{
 .social-icons a:hover{
     color: #d33390;
 }
-
-
-
 .wrapper1 {
     height: 30%;
     width: 30%;
