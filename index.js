@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             isLoggedIn = false;
             authButton.textContent = 'Sign in with Google';
-            authButton.href = `${API_BASE_URL}/auth/google`;
+            authButton.href = "/api/auth/google";
         }
     });
 });
@@ -200,21 +200,95 @@ cartCheckoutForm.addEventListener('submit', async (e) => {
             name: "GARVV Tours & Travels",
             description: "Payment for tour packages",
             order_id: orderData.id,
-            handler: async function (response) {
-                alert('Payment successful!');
-                await fetch(`${API_BASE_URL}/cart/clear`, { method: 'DELETE', credentials: 'include' });
-                cart = [];
-                updateCartCounter();
-                cartModal.classList.remove('visible');
-            },
-            prefill: { name: customerName, email: customerEmail },
-            theme: { color: "#800080" }
-        };
+            // Replace with this:
+handler: async function (response) {
+    alert('Payment successful! Payment ID: ' + response.razorpay_payment_id);
 
+    // Save the successful order to the database
+    const customerDetails = {
+        name: document.getElementById('cart-customer-name').value,
+        email: document.getElementById('cart-customer-email').value,
+    };
+    await fetch('/api/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+            cart: cart,
+            customerDetails: customerDetails,
+            paymentId: response.razorpay_payment_id // Corrected variable name
+        })
+    });
+
+    // Clear the cart from the database
+    await fetch('/api/cart/clear', { method: 'DELETE', credentials: 'include' });
+    cart = [];
+    updateCartCounter();
+    cartModal.classList.remove('visible');
+    },
+        prefill: { name: customerName, email: customerEmail },
+        theme: { color: "#800080" }
+    };
         const rzp1 = new Razorpay(options);
         rzp1.on('payment.failed', (response) => alert('Payment failed: ' + response.error.description));
         rzp1.open();
     } catch (error) {
         console.error('Checkout Error:', error);
     }
+});
+// --- ORDER HISTORY LOGIC ---
+const orderHistoryBtn = document.getElementById('order-history-btn');
+const orderHistoryModal = document.getElementById('order-history-modal');
+const orderHistoryList = document.getElementById('order-history-list');
+const closeOrderHistoryModalBtn = orderHistoryModal.querySelector('.close-btn');
+
+async function displayOrderHistory() {
+    if (!isLoggedIn) {
+        alert('You must be logged in to view your order history.');
+        return;
+    }
+    try {
+        const response = await fetch('/api/orders', { credentials: 'include' });
+        const orders = await response.json();
+        orderHistoryList.innerHTML = ''; // Clear previous list
+
+        if (orders.length === 0) {
+            orderHistoryList.innerHTML = '<p>You have no past orders.</p>';
+        } else {
+            const table = document.createElement('table');
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Items</th>
+                        <th>Amount</th>
+                        <th>Payment ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${orders.map(order => `
+                        <tr>
+                            <td>${new Date(order.created_at).toLocaleDateString()}</td>
+                            <td>${order.package_name}</td>
+                            <td>₹${Number(order.price).toFixed(2)}</td>
+                            <td>${order.razorpay_payment_id}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            `;
+            orderHistoryList.appendChild(table);
+        }
+        orderHistoryModal.classList.add('visible');
+    } catch (error) {
+        console.error('Error fetching order history:', error);
+    }
+}
+
+orderHistoryBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    displayOrderHistory();
+});
+
+closeOrderHistoryModalBtn.addEventListener('click', () => {
+    orderHistoryModal.classList.remove('visible');
 });

@@ -226,41 +226,46 @@ app.post('/api/submit', (req, res) => {
     });
 });
 
-app.post('/api/create-order', (req, res) => {
-    const { 
-        packageName, 
-        packagePrice, 
-        customerName, 
-        customerEmail, 
-        customerAddress, 
-        customerCity, 
-        customerZip 
-    } = req.body;
+app.post('/api/create-order', ensureAuthenticated, (req, res) => {
+    const { cart, customerDetails, paymentId } = req.body;
+    const userId = req.user.id;
 
-    console.log("Order creation request:", req.body);
+    // Create a summary of the package names
+    const packageNames = cart.map(item => `${item.package_name} (x${item.quantity})`).join(', ');
+    const totalPrice = cart.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
 
-    if (!packageName || !packagePrice || !customerName || !customerEmail || !customerAddress) {
-        return res.status(400).send('Missing required order information.');
-    }
-    
-    const sql = 'INSERT INTO orders (package_name, price, customer_name, email, address, city, zip) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id';
-    const values = [packageName, parseFloat(packagePrice), customerName, customerEmail, customerAddress, customerCity, customerZip];
+    const sql = `
+        INSERT INTO orders 
+        (package_name, price, customer_name, email, user_id, razorpay_payment_id) 
+        VALUES ($1, $2, $3, $4, $5, $6) RETURNING id
+    `;
+    const values = [packageNames, totalPrice, customerDetails.name, customerDetails.email, userId, paymentId];
 
     db.query(sql, values, (err, result) => {
         if (err) {
-            console.error('Error executing query:', err.stack);
-            return res.status(500).send('An error occurred while creating your order.');
+            console.error('Error saving order:', err.stack);
+            return res.status(500).send('An error occurred while saving your order.');
         }
-        const orderId = result.rows[0].id;
-        console.log(`Order created with ID: ${orderId}`);
-        
-        res.status(201).json({
-            message: 'Order received. Please proceed to payment.',
-            orderId: orderId,
-        });
+        res.status(201).json({ message: 'Order saved successfully.', orderId: result.rows[0].id });
     });
 });
-
+// GET the current user's order history
+app.get('/api/orders', ensureAuthenticated, (req, res) => {
+    const userId = req.user.id;
+    const sql = `
+        SELECT package_name, price, razorpay_payment_id, created_at 
+        FROM orders 
+        WHERE user_id = $1 
+        ORDER BY created_at DESC
+    `;
+    db.query(sql, [userId], (err, result) => {
+        if (err) {
+            console.error('Error fetching order history:', err.stack);
+            return res.status(500).json({ error: 'Server error' });
+        }
+        res.json(result.rows);
+    });
+});
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });

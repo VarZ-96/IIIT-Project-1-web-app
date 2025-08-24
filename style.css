@@ -580,4 +580,16 @@ ul li{
 .modal-content .btn1:hover {
     background-color: #6a006a;
 }
-
+#order-history-list table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+#order-history-list th, #order-history-list td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+#order-history-list th {
+  background-color: #f2f2f2;
+}
